@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  #php
+  php:
+    build:
+      context: .
+      dockerfile: docker/php.dockerfile
+    volumes:
+      - ./api:/var/www/html
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # Database
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+    networks:
+      - app-network
+  # Nginx
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./api:/var/www/html
+      - ./nginx:/etc/nginx/conf.d/
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: tictactoe-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
