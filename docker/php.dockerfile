@@ -1,18 +1,20 @@
 FROM php:8.2-fpm
 
+# Set the working directory
+WORKDIR /var/www/html
+
 # Install dependencies
 RUN apt-get update && \
     apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    libonig-dev
+    libpq-dev \
+    libonig-dev;
 
-# Set the working directory
-WORKDIR /var/www/html
-
-# Get composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install php dependencies and get composer
+RUN docker-php-ext-install pdo pdo_pgsql && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy the application code
 COPY ./api .
@@ -28,6 +30,9 @@ RUN composer dump-autoload
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Artisan migrate and seed
+RUN php artisan migrate
 
 CMD [ "php-fpm" ]
 EXPOSE 9000
