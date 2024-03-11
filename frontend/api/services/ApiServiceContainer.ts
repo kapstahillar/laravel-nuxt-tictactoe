@@ -1,8 +1,8 @@
-import ApplicationService from "./ApplicationService";
 import type AuthService from "./AuthService";
+import type GameService from "./GameService";
 
 
 export interface ApiServiceContainer {
-    application: ApplicationService;
+    gameService: GameService;
     authentication: AuthService;
 }
