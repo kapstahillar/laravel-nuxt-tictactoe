@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class GameSession extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'fields',
+        'user_id'
+    ];
 }
