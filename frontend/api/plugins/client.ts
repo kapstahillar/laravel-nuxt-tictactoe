@@ -4,9 +4,10 @@ import { splitCookiesString } from "set-cookie-parser";
 import ApiError from '../models/ApiError';
 import { useUser } from '../composables/useUser';
 import type { ApiServiceContainer } from '../services/ApiServiceContainer';
-import ApplicationService from '../services/ApplicationService';
+import ApplicationService from '../services/GameService';
 import AuthService from '../services/AuthService';
 import type User from '../models/User';
+import GameService from '../services/GameService';
 
 const SECURE_METHODS = new Set(['post', 'delete', 'put', 'patch']);
 const UNAUTHENTICATED_STATUSES = new Set([401, 419]);
@@ -42,6 +43,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         retry: false,
 
         async onRequest({ options }) {
+
             if (process.server) {
                 options.headers = buildServerHeaders(options.headers);
             }
@@ -55,6 +57,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
                 options.headers = await buildClientHeaders(options.headers);
             }
+
         },
 
 
@@ -132,7 +135,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const client: any = $fetch.create(httpOptions);
 
     const api: ApiServiceContainer = {
-        application: new ApplicationService(client),
+        gameService: new GameService(client),
         authentication: new AuthService(client),
     };
 

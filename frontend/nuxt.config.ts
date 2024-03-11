@@ -19,12 +19,18 @@ export default defineNuxtConfig({
       ],
     },
   },
+  modules: [
+    '@element-plus/nuxt',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+    'dayjs-nuxt',
+  ],
   runtimeConfig: {
     public: {
       baseUrl: "http://localhost:3000",
-      homeUrl: "/dashboard",
+      homeUrl: "/game",
       loginUrl: "/login",
-      verificationUrl: "/verify-email",
+      registerUrl: "/register",
     },
   },
 })
