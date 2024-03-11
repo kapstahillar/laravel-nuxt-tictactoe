@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: docker/php.dockerfile
+    container_name: tictactoe-php
     volumes:
       - ./api:/var/www/html
     depends_on:
@@ -15,7 +16,8 @@ services:
 
   # Database
   postgres:
-    image: postgres:latest
+    image: postgres:16-alpine
+    container_name: tictactoe-postgres
     restart: always
     ports:
       - "5432:5432"
@@ -25,11 +27,28 @@ services:
       POSTGRES_PASSWORD: secret
     networks:
       - app-network
+
+  # phpPgAdmin
+  phppgadmin:
+    image: dpage/pgadmin4
+    container_name: tictactoe-phppgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
   # Nginx
   nginx:
     build:
       context: .
       dockerfile: docker/nginx.dockerfile
+    container_name: tictactoe-nginx
     ports:
       - "80:80"
     volumes:

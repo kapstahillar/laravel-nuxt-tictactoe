@@ -1,9 +1,9 @@
-import { useAuth } from "../api/composables/useAuth";
+import { useAuthStore } from "~/store/auth.store";
 
 export default defineNuxtRouteMiddleware(() => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuthStore();
     const config = useRuntimeConfig();
-    if (isAuthenticated.value === true) {
-        return navigateTo(config.public.homeUrl as string, { replace: true });
+    if (isAuthenticated) {
+        return navigateTo(config.public.homeUrl, { replace: true });
     }
 });
