@@ -15,11 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// v1 routes
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('/gamesession/all', [GameSessionController::class, 'getAll']);
+    Route::get('/gamesession', [GameSessionController::class, 'getCurrentGame']);
+    Route::post('/gamesession', [GameSessionController::class, 'startNewGame']);
+    Route::put('/gamesession', [GameSessionController::class, 'makeStep']);
+    Route::delete('/gamesession', [GameSessionController::class, 'quitGame']);
 });
 
-// v1 routes
-Route::prefix('v1')->group(function () {
-    Route::get('/gamesession', [GameSessionController::class, 'getAll']);
-});
