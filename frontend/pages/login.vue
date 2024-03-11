@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useAuthStore } from '~/store/auth.store';
 definePageMeta({
     middleware: ["guest"],
 });
@@ -18,13 +19,13 @@ const credentials: Credentials = reactive({
 });
 
 const error = ref<string>("");
-
+const auth = useAuthStore()
 async function submit() {
     try {
         error.value = "";
-
         await login(credentials.username, credentials.password, true);
-        router.push(config.public.homeUrl);
+        if (auth.isAuthenticated)
+            router.push(config.public.homeUrl);
     } catch (err) {
         error.value = err as string;
     }
@@ -38,28 +39,16 @@ async function submit() {
         <form @submit.prevent="submit">
             <small>{{ error }}</small>
 
-            <input
-                id="username"
-                v-model="credentials.username"
-                type="text"
-                name="username"
-                placeholder="Your username"
-                autocomplete="off"
-            />
-            <input
-                id="password"
-                v-model="credentials.password"
-                type="password"
-                name="password"
-                placeholder="Your password"
-                autocomplete="off"
-            />
+            <input id="username" v-model="credentials.username" type="text" name="username" placeholder="Your username"
+                autocomplete="off" />
+            <input id="password" v-model="credentials.password" type="password" name="password"
+                placeholder="Your password" autocomplete="off" />
 
             <button type="submit">Login</button>
         </form>
 
         <NuxtLink to="/register" class="text-blue-500">
-          Register
+            Register
         </NuxtLink>
     </div>
 </template>
