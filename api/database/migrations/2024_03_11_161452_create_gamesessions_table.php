@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('game_sessions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('fields')->default('["-","-","-","-","-","-","-","-","-"]');
+            $table->string('state')->default(' - - - - - - - - ');
             $table->integer('difficulty')->default(0);
             $table->integer('winner')->nullable();
             $table->dateTime('completed_at')->nullable();
