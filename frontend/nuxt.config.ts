@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   $development: {
     ssr: true,
     devtools: {
-      enabled: true,
+      enabled: false,
     },
   },
   app: {

@@ -10,9 +10,9 @@ export const useAuth = () => {
         password: string,
         remember = true
     ): Promise<any> {
-        await authentication.login(username, password, remember);
-        let user = await authentication.user();
-        await auth.setUser(user)
+        await authentication.login(username, password, remember)
+        const user = await authentication.user()
+        auth.setUser(user)
     }
 
     async function register(
@@ -23,7 +23,7 @@ export const useAuth = () => {
             username,
             password
         );
-        let user = await authentication.user();
+        const user = await authentication.user();
         await auth.setUser(user);
     }
 

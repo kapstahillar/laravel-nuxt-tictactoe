@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\InvalidLoginCredentials;
+use App\Exceptions\UsernameAlreadyInUse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -16,6 +18,7 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
+
         $data = $request->validated();
         $user = User::create([
             'username' => $data["username"],
@@ -31,9 +34,7 @@ class AuthController extends Controller
         if ($request->authenticate()) {
             return response()->noContent();
         } else {
-            return response()->json([
-                "error" => "invalid login credentials"
-            ], 401);
+            throw new InvalidLoginCredentials;
         }
     }
 

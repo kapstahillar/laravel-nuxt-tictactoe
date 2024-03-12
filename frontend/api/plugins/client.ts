@@ -4,15 +4,14 @@ import { splitCookiesString } from "set-cookie-parser";
 import ApiError from '../models/ApiError';
 import { useUser } from '../composables/useUser';
 import type { ApiServiceContainer } from '../services/ApiServiceContainer';
-import ApplicationService from '../services/GameService';
 import AuthService from '../services/AuthService';
 import type User from '../models/User';
 import GameService from '../services/GameService';
 
 const SECURE_METHODS = new Set(['post', 'delete', 'put', 'patch']);
 const UNAUTHENTICATED_STATUSES = new Set([401, 419]);
-const UNVERIFIED_USER_STATUS = 409;
 const VALIDATION_ERROR_STATUS = 422;
+const FORBIDDEN_ERROR_STATUS = 403;
 
 export default defineNuxtPlugin((nuxtApp) => {
     const event = useRequestEvent();
@@ -88,15 +87,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 return;
             }
 
-            if (
-                apiConfig.redirectUnverified &&
-                response.status === UNVERIFIED_USER_STATUS
-            ) {
-                await navigateTo(config.public.verificationUrl as string);
-                return;
-            }
-
-            if (response.status === VALIDATION_ERROR_STATUS) {
+            if (response.status === VALIDATION_ERROR_STATUS || response.status === FORBIDDEN_ERROR_STATUS) {
                 throw new ApiError(response._data);
             }
         },

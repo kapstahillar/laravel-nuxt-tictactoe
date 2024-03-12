@@ -1,20 +1,19 @@
-<script lang="ts" setup>
-import RegisterForm from '~/components/register/RegisterForm.vue';
-
-definePageMeta({
-    middleware: ["guest"],
-});
-
-
-</script>
-
 <template>
     <ElMain>
-        <ElCard style="max-width: 480px;">
+        <ElCard class="registerpage__container-card">
             <RegisterForm />
         </ElCard>
     </ElMain>
-
 </template>
-
-<style scoped></style>
+<script lang="ts" setup>
+import RegisterForm from '~/components/register/RegisterForm.vue';
+definePageMeta({
+    middleware: ["guest"],
+});
+</script>
+<style scoped>
+.registerpage__container-card {
+    max-width: 480px;
+    margin: auto;
+}
+</style>
