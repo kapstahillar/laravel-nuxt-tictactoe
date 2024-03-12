@@ -1,7 +1,7 @@
 <template>
     <ul class="gameslist__list" style="overflow: auto">
         <li v-if="props.games.length > 0" v-for="gameSession in props.games">
-            <ElCard class="gameslist__item-card" :class="{ winner: isUserWinner(gameSession.winner) }">
+            <ElCard class="gameslist__item-card" :class="getWinnerClass(gameSession.winner)">
                 <span v-if="gameSession.completed_at != null">
                     {{ $dayjs(gameSession.completed_at).format('DD/MM/YYYY HH:mm') }}
                 </span>
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import type GameSession from '~/api/models/Gamesession';
 
+
 const props = defineProps({
     games: {
         type: Array as PropType<GameSession[]>,
@@ -21,16 +22,15 @@ const props = defineProps({
     }
 })
 
-function isUserWinner(value: number | null) {
-    if (null === value || 1 === value) {
-        return false
+function getWinnerClass(value: number | null) {
+    if (null === value) {
+        return "winner-none"
+    } else if (value === 1) {
+        return "winner-opponent"
+    } else {
+        return "winner-player"
     }
-    return true
 }
-
-onMounted(() => {
-    console.log(props)
-})
 
 </script>
 <style scoped>
@@ -42,7 +42,15 @@ onMounted(() => {
     list-style: none;
 }
 
-.gameslist__item-card.winner {
+.gameslist__item-card.winner-player {
     background-color: green;
+}
+
+.gameslist__item-card.winner-opponent {
+    background-color: orangered;
+}
+
+.gameslist__item-card.winner-none {
+    background-color: yellow;
 }
 </style>

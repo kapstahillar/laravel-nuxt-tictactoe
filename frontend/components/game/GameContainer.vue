@@ -1,9 +1,9 @@
 <template>
-    <div v-if="playerInAGame" class="gamecontainer__stateholder current"> Your turn </div>
-    <GameBoard :gameSession="currentGame" v-if="playerInAGame" class="gamecontainer__gameboard" />
+    <GameBoard @onGameFinished="onGameFinished" :gameSession="currentGame" v-if="playerInAGame"
+        class="gamecontainer__gameboard" />
     <ElRow>
         <ElButton v-if="playerInAGame" @click="quitGame" type="danger"> Quit </ElButton>
-        <ElButton v-else type="success" @click="startNewGame"> Start </ElButton>
+        <ElButton v-if="!playerInAGame && !loading" type="success" @click="startNewGame"> Start </ElButton>
     </ElRow>
 </template>
 
@@ -15,6 +15,7 @@ const currentGame = ref(null as GameSession | null)
 const playerInAGame = ref(false)
 const { gameService } = useApi()
 const emit = defineEmits(['onNewGameStarted'])
+const loading = ref(true);
 
 async function checkForAGame() {
     const game = await gameService.getCurrentGame()
@@ -31,6 +32,11 @@ async function startNewGame() {
     emit('onNewGameStarted', game)
 }
 
+function onGameFinished() {
+    playerInAGame.value = false
+    currentGame.value = null
+}
+
 async function quitGame() {
     await gameService.quitCurrentGame()
     playerInAGame.value = false
@@ -39,19 +45,12 @@ async function quitGame() {
 
 onMounted(() => {
     checkForAGame()
+    loading.value = false
 })
 </script>
 
 <style scoped>
 .gamecontainer__gameboard {
     margin: 40px 0;
-}
-
-.gamecontainer__stateholder {
-    color: orange;
-}
-
-.gamecontainer__stateholder.current {
-    color: green;
 }
 </style>
