@@ -21,13 +21,11 @@ class GameSessionService
 
     function quitGame(int $user_id)
     {
-        DB::table('game_sessions')
-            ->where('user_id', $user_id)
-            ->where('completed_at', null)
-            ->update([
-                'winner' => 1,
-                'completed_at' => Carbon::now(),
-            ]);
+        $gameSession = $this->getGame($user_id);
+        $gameSession->completed_at = Carbon::now();
+        $gameSession->winner = 2;
+        $gameSession->save();
+        return $gameSession;
     }
 
     function getGame(int $user_id): GameSession|null

@@ -31,8 +31,8 @@ class GameSessionController extends Controller
     public function quitGame()
     {
         $user = Auth::user();
-        $this->gameSessionService->quitGame($user->id);
-        return response()->json("{ success: true }", 200);
+        $gameSession = $this->gameSessionService->quitGame($user->id);
+        return response()->json($gameSession, 200);
     }
 
     public function makeStep(GameSessionStepRequest $request): JsonResponse
