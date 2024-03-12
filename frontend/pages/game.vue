@@ -2,9 +2,6 @@
     <ElContainer class="game__container">
         <ElHeader class="game__header">
             <ElRow>
-                <ElCol :span="6" :offset="12">
-                    <h2 title="game__title"> Tic Tac Toe </h2>
-                </ElCol>
                 <ElCol :span="2" :offset="4">
                     <ElButton type="info" class="game__logout-button" @click="submitLogout">Logout</ElButton>
                 </ElCol>
@@ -46,6 +43,7 @@ function onNewGameStarted(game: GameSession) {
 function onGameFinished(game: GameSession) {
     games.value.shift()
     games.value.unshift(game)
+    console.log(games)
 }
 
 async function submitLogout() {

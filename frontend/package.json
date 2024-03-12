@@ -25,5 +25,8 @@
     "dayjs-nuxt": "^2.1.9",
     "element-plus": "^2.6.1",
     "set-cookie-parser": "^2.6.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.13.0"
   }
 }
