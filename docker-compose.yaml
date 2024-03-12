@@ -1,0 +1,91 @@
+version: '3'
+
+services:
+  #php
+  php:
+    build:
+      context: .
+      dockerfile: docker/php.dockerfile
+    container_name: tictactoe-php
+    volumes:
+      - ./api:/var/www/html
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    links:
+      - postgres
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/npm.dockerfile
+    container_name: tictactoe-npm
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nginx
+    networks:
+      - app-network
+    links:
+      - nginx
+    environment:
+      - NUXT_HOST=0.0.0.0
+  # Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: tictactoe-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+
+  # phpPgAdmin
+  phppgadmin:
+    image: dpage/pgadmin4
+    container_name: tictactoe-phppgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
+  # Nginx
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.dockerfile
+    container_name: tictactoe-nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./api:/var/www/html
+      - ./nginx:/etc/nginx/conf.d/
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: tictactoe-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

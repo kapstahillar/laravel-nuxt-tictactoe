@@ -1,0 +1,13 @@
+body {
+    margin: 0px;
+    min-height: 600px;
+}
+
+.__nuxt {
+    min-height: 100vh;
+}
+
+.app__container {
+    min-height: 100vh;
+    background-color: #e1f7f8;
+}
