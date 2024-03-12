@@ -3,7 +3,7 @@ export default defineNuxtConfig({
         public: {
             api: {
                 // This is the URL of the API server.
-                baseUrl: "http://localhost:80",
+                baseUrl: "http://localhost:8000",
                 // Endpoint to get the cookie.
                 cookieRequestUrl: "/sanctum/csrf-cookie",
                 // Endpoint to get the user.

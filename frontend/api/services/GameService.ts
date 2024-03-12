@@ -20,7 +20,7 @@ export default class GameService extends ApiServiceBase {
         return await this.call("/api/v1/gamesession/all", { method: "get" });
     }
 
-    async quitCurrentGame(): Promise<void> {
+    async quitCurrentGame(): Promise<GameSession> {
         return await this.call("/api/v1/gamesession", { method: "delete" });
     }
 }

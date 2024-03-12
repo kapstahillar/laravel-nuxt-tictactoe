@@ -9,6 +9,7 @@
 
 <script lang="ts" setup>
 
+import { dayjs } from 'element-plus';
 import type GameSession from '~/api/models/Gamesession';
 
 const currentGame = ref(null as GameSession | null)
@@ -39,7 +40,8 @@ function onGameFinished(gameSession: GameSession) {
 }
 
 async function quitGame() {
-    await gameService.quitCurrentGame()
+    const gameSession = await gameService.quitCurrentGame()
+    emit('onGameFinished', gameSession)
     playerInAGame.value = false
     currentGame.value = null
 }

@@ -31,8 +31,5 @@ RUN composer dump-autoload
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Artisan migrate and seed
-RUN php artisan migrate
-
 CMD [ "php-fpm" ]
 EXPOSE 9000

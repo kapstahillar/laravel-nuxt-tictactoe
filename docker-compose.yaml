@@ -13,7 +13,23 @@ services:
       - postgres
     networks:
       - app-network
-
+    links:
+      - postgres
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/npm.dockerfile
+    container_name: tictactoe-npm
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nginx
+    networks:
+      - app-network
+    links:
+      - nginx
+    environment:
+      - NUXT_HOST=0.0.0.0
   # Database
   postgres:
     image: postgres:16-alpine
@@ -27,6 +43,8 @@ services:
       POSTGRES_PASSWORD: secret
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
 
   # phpPgAdmin
   phppgadmin:
@@ -50,7 +68,7 @@ services:
       dockerfile: docker/nginx.dockerfile
     container_name: tictactoe-nginx
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - ./api:/var/www/html
       - ./nginx:/etc/nginx/conf.d/
