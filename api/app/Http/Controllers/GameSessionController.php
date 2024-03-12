@@ -6,7 +6,6 @@ use App\Http\Requests\GameSessionStepRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Services\GameSessionService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class GameSessionController extends Controller
