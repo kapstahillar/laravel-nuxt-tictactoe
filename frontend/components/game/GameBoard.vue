@@ -1,64 +1,37 @@
 <template>
     <div class="gameboard__container">
-        <ElRow :gutter="20">
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(0)"
-                    round>
-                    {{ button0 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(1)"
-                    round>
-                    {{ button1 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(2)"
-                    round>
-                    {{ button2 }}
-                </ElButton>
-            </ElCol>
+        <ElRow :gutter="20" justify="center">
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(0)" round>
+                {{ button0 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(1)" round>
+                {{ button1 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(2)" round>
+                {{ button2 }}
+            </ElButton>
         </ElRow>
-        <ElRow :gutter="20">
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(3)"
-                    round>
-                    {{ button3 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(4)"
-                    round>
-                    {{ button4 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(5)"
-                    round>
-                    {{ button5 }}
-                </ElButton>
-            </ElCol>
+        <ElRow :gutter="20" justify="center">
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(3)" round>
+                {{ button3 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(4)" round>
+                {{ button4 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(5)" round>
+                {{ button5 }}
+            </ElButton>
         </ElRow>
-        <ElRow :gutter="20">
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(6)"
-                    round>
-                    {{ button6 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(7)"
-                    round>
-                    {{ button7 }}
-                </ElButton>
-            </ElCol>
-            <ElCol :span="6">
-                <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(8)"
-                    round>
-                    {{ button8 }}
-                </ElButton>
-            </ElCol>
+        <ElRow :gutter="20" justify="center">
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(6)" round>
+                {{ button6 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(7)" round>
+                {{ button7 }}
+            </ElButton>
+            <ElButton :disabled=makingAMove class="gameboard__gamebutton" type="info" @click="onButtonPressed(8)" round>
+                {{ button8 }}
+            </ElButton>
         </ElRow>
     </div>
 </template>
@@ -91,7 +64,7 @@ const makingAMove = ref(false)
 
 async function onButtonPressed(index: number) {
     makingAMove.value = true
-    let response = await gameService.makeStep(index)
+    const response = await gameService.makeStep(index)
     response.state.split("-").forEach((item: string, key: number) => {
         arrayOfButtons[key].value = item
     });
@@ -103,8 +76,7 @@ async function onButtonPressed(index: number) {
 }
 
 function finishGame(gameSession: GameSession) {
-
-    if (gameSession.winner === null) {
+    if (gameSession.winner === 2) {
         ElNotification({
             title: 'Tie',
             message: 'Game has ended in a tie',
@@ -126,7 +98,7 @@ function finishGame(gameSession: GameSession) {
 
     setTimeout(() => {
         makingAMove.value = false
-        emit('onGameFinished', gameSession.winner)
+        emit('onGameFinished', gameSession)
     }, 1000)
 }
 
@@ -154,5 +126,7 @@ onMounted(() => {
     padding: 40px;
     height: 100px;
     width: 100px;
+    font-size: 40px;
+    text-transform: uppercase;
 }
 </style>

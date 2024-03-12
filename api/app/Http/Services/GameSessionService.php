@@ -2,12 +2,12 @@
 namespace App\Http\Services;
 
 use App\Exceptions\InvalidStepException;
+use App\Models\Enums\GameEndCondition;
 use App\Models\Enums\GameField;
 use App\Models\GameSession;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class GameSessionService
 {
@@ -50,16 +50,10 @@ class GameSessionService
         }
         $state[$index] = GameField::PLAYER->value;
 
-        if ($this->checkEndCondition($state)) {
-            $gameSession->completed_at = Carbon::now();
-            $gameSession->winner = 0;
-        } else {
+        if (!$this->tryFinishGame($gameSession, $state)) {
             $stepIndex = $this->makeAIStep($state);
             $state[$stepIndex] = GameField::AI->value;
-            if ($this->checkEndCondition($state)) {
-                $gameSession->completed_at = Carbon::now();
-                $gameSession->winner = 1;
-            }
+            $this->tryFinishGame($gameSession, $state, false);
         }
 
         $gameSession->serializeState($state);
@@ -130,19 +124,6 @@ class GameSessionService
         }
     }
 
-    private function checkEndCondition(array $state): bool
-    {
-        if (!$this->checkAnyAvailableStepsLeft($state)) {
-            return true;
-        }
-
-        if ($this->checkWinningCondition($state)) {
-            return true;
-        }
-
-        return false;
-    }
-
     private function checkWinningCondition(array $state)
     {
         $board = array_chunk($state, 3);
@@ -203,6 +184,23 @@ class GameSessionService
         return false;
     }
 
-
+    private function tryFinishGame(GameSession $gameSession, array $state, bool $forPlayer = true)
+    {
+        if ($this->checkWinningCondition($state)) {
+            $gameSession->completed_at = Carbon::now();
+            if ($forPlayer) {
+                $gameSession->winner = 0;
+            } else {
+                $gameSession->winner = 1;
+            }
+            return true;
+        } elseif (!$this->checkAnyAvailableStepsLeft($state)) {
+            $gameSession->completed_at = Carbon::now();
+            $gameSession->winner = 2;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
