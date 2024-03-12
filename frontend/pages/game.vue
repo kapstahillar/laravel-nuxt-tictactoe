@@ -1,26 +1,25 @@
 <template>
-    <div class="common-layout">
+    <ElContainer class="game__container">
+        <ElHeader class="game__header">
+            <ElRow>
+                <ElCol :span="6" :offset="12">
+                    <h2 title="game__title"> Tic Tac Toe </h2>
+                </ElCol>
+                <ElCol :span="2" :offset="4">
+                    <ElButton type="info" class="game__logout-button" @click="submitLogout">Logout</ElButton>
+                </ElCol>
+            </ElRow>
+        </ElHeader>
         <ElContainer>
-            <ElHeader class="game__header">
-                <ElRow>
-                    <ElCol :span="6">
-                        <h2> Tic Tac Toe </h2>
-                    </ElCol>
-                    <ElCol :span="2" :offset="16">
-                        <ElButton type="info" @click="submitLogout">Logout</ElButton>
-                    </ElCol>
-                </ElRow>
-            </ElHeader>
-            <ElContainer>
-                <ElAside>
-                    <GamesList :games="games" ref="listRef" />
-                </ElAside>
-                <ElMain class="game__container">
-                    <GameContainer @onNewGameStarted="onNewGameStarted" />
-                </ElMain>
-            </ElContainer>
+            <ElAside class="game__sidebar">
+                <GamesList class="game__gamelist" :games="games" ref="listRef" />
+            </ElAside>
+            <ElMain>
+                <GameContainer class="game__game-container" @onGameFinished="onGameFinished"
+                    @onNewGameStarted="onNewGameStarted" />
+            </ElMain>
         </ElContainer>
-    </div>
+    </ElContainer>
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +40,12 @@ const { gameService } = useApi()
 const games = ref(await gameService.getAllGames())
 
 function onNewGameStarted(game: GameSession) {
-    games.value.push(game)
+    games.value.unshift(game)
+}
+
+function onGameFinished(game: GameSession) {
+    games.value.shift()
+    games.value.unshift(game)
 }
 
 async function submitLogout() {
@@ -50,4 +54,25 @@ async function submitLogout() {
 }
 
 </script>
-<style scoped></style>
+<style scoped>
+.game__header {
+    background-color: #439775;
+}
+
+.game__logout-button {
+    width: 100%;
+    margin-top: 12px;
+    margin-right: 10px;
+}
+
+.game__game-container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game__sidebar {
+    background-color: #48BF84;
+}
+
+.game__gamelist {}
+</style>

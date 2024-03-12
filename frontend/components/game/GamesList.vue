@@ -23,8 +23,8 @@ const props = defineProps({
 })
 
 function getWinnerClass(value: number | null) {
-    if (null === value) {
-        return "winner-none"
+    if (null === value || 2 === value) {
+        return "winner-tie"
     } else if (value === 1) {
         return "winner-opponent"
     } else {
@@ -35,7 +35,13 @@ function getWinnerClass(value: number | null) {
 </script>
 <style scoped>
 .gameslist__list {
-    padding-left: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.gameslist__list {
+    max-height: 800px;
+    overflow-y: scroll;
 }
 
 .gameslist__list li {
@@ -50,7 +56,7 @@ function getWinnerClass(value: number | null) {
     background-color: orangered;
 }
 
-.gameslist__item-card.winner-none {
+.gameslist__item-card.winner-tie {
     background-color: yellow;
 }
 </style>
