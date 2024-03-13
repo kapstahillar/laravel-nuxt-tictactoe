@@ -15,6 +15,7 @@ COPY ./frontend/ ./
 
 
 # Expose a port
+EXPOSE 3100
 EXPOSE 3000
 
 # Define the command to run your application in development mode
