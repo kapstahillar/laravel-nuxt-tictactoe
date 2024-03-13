@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameSessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,14 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::put('/gamesession', [GameSessionController::class, 'makeStep']);
     Route::delete('/gamesession', [GameSessionController::class, 'quitGame']);
 });
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register');
+
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth:sanctum')
+    ->name('logout');
 
