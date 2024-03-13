@@ -7,30 +7,31 @@ services:
       context: .
       dockerfile: docker/app/php.dockerfile
     container_name: tictactoe-php
-    environment:
-      - FRONTEND_URL=http://localhost:3100
-    volumes:
-      - ./api:/var/www/html
+    # volumes:
+    #   - ./api:/var/www/html
     depends_on:
       - postgres
     networks:
       - app-network
     links:
       - postgres
+    environment:
+      - FRONTEND_URL=localhost:3200
+      - APP_ULR=http://localhost:8000
   frontend:
     build:
       context: .
       dockerfile: docker/npm/npm.dockerfile
     container_name: tictactoe-npm
     ports:
-      - "3100:3000"
+      - "3200:3000"
     networks:
       - app-network
     environment:
       - NUXT_HOST=0.0.0.0
       - HOST=0.0.0.0
-      - NUXT_PUBLIC_BASE_URL=http://localhost:3100
-      - NUXT_PUBLIC_API_BASE_URL=http://localhost:80
+      - NUXT_PUBLIC_BASE_URL=http://localhost:3200
+      - NUXT_PUBLIC_API_BASE_URL=http://localhost:8000
   # Database
   postgres:
     image: postgres:16-alpine
@@ -69,7 +70,7 @@ services:
       dockerfile: docker/nginx/nginx.dockerfile
     container_name: tictactoe-nginx
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - ./api:/var/www/html
       - ./nginx:/etc/nginx/conf.d/

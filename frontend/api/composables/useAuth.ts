@@ -12,7 +12,7 @@ export const useAuth = () => {
     ): Promise<any> {
         await authentication.login(username, password, remember)
         const user = await authentication.user()
-        auth.setUser(user)
+        await auth.setUser(user)
     }
 
     async function register(
