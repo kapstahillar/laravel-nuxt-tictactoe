@@ -8,21 +8,21 @@ export default class AuthService extends ApiServiceBase {
         password: string,
         remember = true
     ): Promise<any> {
-        return await this.call("/login", {
+        return await this.call("/api/login", {
             method: "post",
             body: { username, password, remember },
         });
     }
 
     async logout(): Promise<any> {
-        return await this.call("/logout", { method: "post" });
+        return await this.call("/api/logout", { method: "post" });
     }
 
     async register(
         username: string,
         password: string,
     ): Promise<any> {
-        return await this.call("/register", {
+        return await this.call("/api/register", {
             method: "post",
             body: { username, password },
         });
