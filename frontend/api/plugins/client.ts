@@ -38,6 +38,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         credentials: 'include',
         headers: {
             Accept: 'application/json',
+            'content-type': 'application/json'
         },
         retry: false,
 
