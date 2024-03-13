@@ -11,10 +11,11 @@ AI uses minmax algorithm for playing
 
 
 ```
-mv api/.env.example api/.env
-mv frontend/.env.example frontend/.env
+cp api/.env.example api/.env
+cp frontend/.env.example frontend/.env
 docker-compose build
-docker-compose exec php php artisan migrate
-docker-compose up
+docker-compose up -d
+docker-compose exec php /var/www/html/artisan migrate
+
 ```
 Access Localhost:3000 or what ever port has been set in you environment
