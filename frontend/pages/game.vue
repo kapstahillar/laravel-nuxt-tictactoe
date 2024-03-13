@@ -34,7 +34,7 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const listRef: Ref<typeof GamesList | null> = ref(null);
 const { gameService } = useApi()
-const games = ref(await gameService.getAllGames())
+const games = ref<GameSession[]>([])
 
 function onNewGameStarted(game: GameSession) {
     games.value.unshift(game)
@@ -51,6 +51,13 @@ async function submitLogout() {
     router.push(config.public.loginUrl);
 }
 
+async function getGames() {
+    games.value = await gameService.getAllGames()
+}
+
+onMounted(() => {
+    getGames()
+})
 </script>
 <style scoped>
 .game__header {
